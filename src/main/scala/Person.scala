@@ -1,3 +1,3 @@
-abstract class Person(val name: String) {
-
+abstract class Person() {
+  val name: String
 }

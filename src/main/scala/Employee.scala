@@ -1,3 +1,3 @@
-class Employee(name:String) extends Person(name){
+class Employee(val name:String) extends Person{
 
 }

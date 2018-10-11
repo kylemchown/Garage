@@ -1,4 +1,4 @@
-class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle]) {
+class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var open: Boolean) {
 
   def addVehicle(vehicle: Vehicle)={
     vehicles.append(vehicle)
@@ -19,8 +19,41 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle]) {
   }
 
   def fixVehicle(id: Int)={
-    val foundVehicle = vehicles.filter(_.id == id)
-    var vehicle = foundVehicle(0)
+    if(open) {
+      val a = vehicles.filter(_.id == id)
+      val b = a(0)
+      println("Before fix: " + b.toString)
+      val c = vehicles.indexOf(b)
+      b.broken = false
+      vehicles = vehicles.updated(c, b)
+      println("After fic: " + b.toString)
+      println("The bill is " + calcBill(b))
+    }
+    else{
+      println("The garage is closed, so nothing can be fixed")
+    }
+
+  }
+
+  def calcBill(vehicle: Vehicle)={
+    vehicle match{
+      case vehicle: Car => 100
+      case vehicle: Bike => 50
+      case _ => 0
+    }
+  }
+
+  def viewContents(): Unit ={
+    println("***The contents of the garage are:***")
+    vehicles.foreach(println)
+  }
+
+  def openGarage()={
+    open = true
+  }
+
+  def closeGarage()={
+    open = false
   }
 
 }
