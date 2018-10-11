@@ -22,12 +22,14 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
     if(open) {
       val a = vehicles.filter(_.id == id)
       val b = a(0)
-      println("Before fix: " + b.toString)
+      var toFix = 0
       val c = vehicles.indexOf(b)
-      b.broken = false
+      b.parts.map(x=>if(x.broken == true){toFix+=1})
+      println("There are " + toFix + " broken parts")
+      println("The cost to fix this is " + calcBill(b))
+      b.parts.map(x=>x.broken=false)
       vehicles = vehicles.updated(c, b)
-      println("After fic: " + b.toString)
-      println("The bill is " + calcBill(b))
+      b.parts.map(x=>println(x.toString))
     }
     else{
       println("The garage is closed, so nothing can be fixed")
@@ -36,11 +38,9 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
   }
 
   def calcBill(vehicle: Vehicle)={
-    vehicle match{
-      case vehicle: Car => 100
-      case vehicle: Bike => 50
-      case _ => 0
-    }
+    var cost = 0
+    vehicle.parts.map(x=> if (x.broken==true) {cost += 20 })
+    cost
   }
 
   def viewContents(): Unit ={
@@ -54,6 +54,7 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
 
   def closeGarage()={
     open = false
+    vehicles = scala.collection.mutable.ArrayBuffer[Vehicle]()
   }
 
 }
