@@ -19,6 +19,9 @@ object Runner {
     garage.fixVehicle(123)
 
 
+    var d = Array.fill(scala.util.Random.nextInt(10)+10){new Part()}
+    d.map(x => if(scala.util.Random.nextInt(2) == 0){x.broken = false})
+    d.map(x => println(x.toString))
 
 
 
