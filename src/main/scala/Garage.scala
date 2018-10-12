@@ -1,6 +1,6 @@
-class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var open: Boolean, var employees: scala.collection.mutable.ArrayBuffer[Employee]) {
+class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var open: Boolean, var employees: scala.collection.mutable.ArrayBuffer[Employee], var dayProfit: Int) {
 
-  def this(vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], open: Boolean) = this(vehicles,open,scala.collection.mutable.ArrayBuffer[Employee]())
+  def this(vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], open: Boolean) = this(vehicles,open,scala.collection.mutable.ArrayBuffer[Employee](),0)
 
   def addVehicle(vehicle: Vehicle)={
     vehicles.append(vehicle)
@@ -16,23 +16,46 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
 //    vehicles = newVehicles
 //  }
 
-  def newEmployee(name: String)={
-    employees.append(new Employee(scala.util.Random.alphanumeric.take(5).mkString + scala.util.Random.alphanumeric.take(5).mkString))
+  def newEmployee()={
+    employees.append(new Employee(scala.util.Random.alphanumeric.take(5).mkString +" "+ scala.util.Random.alphanumeric.take(5).mkString))
   }
 
-  def fixVehicle(id: Int)={
+  def fixVehicle(index: Int)={
     if(open) {
       val employee = pickEmployee()
-      val a = vehicles.filter(_.id == id)
-      val b = a(0)
+      val b = vehicles(index)
+      b.timeStart = employee.time
+      b.servedBy = employee.name
       var toFix = 0
-      val c = vehicles.indexOf(b)
       b.parts.map(x=>if(x.broken == true){toFix+=1})
       employee.time += toFix
+      b.timeEnd = employee.time
       println("There are " + toFix + " broken parts")
       println("The cost to fix this is " + calcBill(b))
       b.parts.map(x=>x.broken=false)
-      vehicles = vehicles.updated(c, b)
+      vehicles = vehicles.updated(index, b)
+    }
+    else{
+      println("The garage is closed, so nothing can be fixed")
+    }
+
+  }
+
+  def fixVehicle(vehicle: Vehicle)={
+    if(open) {
+      val employee = pickEmployee()
+      val b = vehicle
+      val index = vehicles.indexOf(b)
+      b.timeStart = employee.time
+      b.servedBy = employee.name
+      var toFix = 0
+      b.parts.map(x=>if(x.broken == true){toFix+=1})
+      employee.time += toFix
+      b.timeEnd = employee.time
+      println("There are " + toFix + " broken parts")
+      println("The cost to fix this is " + calcBill(b))
+      b.parts.map(x=>x.broken=false)
+      vehicles = vehicles.updated(index, b)
     }
     else{
       println("The garage is closed, so nothing can be fixed")
@@ -54,8 +77,14 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
   def openGarage()={
     open = true
     for(i<-1 to scala.util.Random.nextInt(11)+10){
-      vehicles.append(Generator.makeCar())
+      if(scala.util.Random.nextInt(2) == 0){
+        vehicles.append(Generator.makeCar())
+      }
+      else {
+        vehicles.append(Generator.makeBike())
+      }
     }
+
   }
 
   def closeGarage()={
@@ -75,4 +104,15 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
 //    var noBroken = 0
 //    vehicle.parts.map(x=>if(x.broken == true){noBroken+=1})
 //  }
+  def simDay()={
+  closeGarage()
+  openGarage()
+//  for(i<-0 to vehicles.size - 1){
+//    fixVehicle(i)
+//  }
+  vehicles.foreach(fixVehicle(_))
+  viewContents()
+  employees.map(x=>println(x.toString()))
+}
+
 }
