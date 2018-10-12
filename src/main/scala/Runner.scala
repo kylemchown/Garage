@@ -2,8 +2,8 @@ object Runner {
 
   def main(args: Array[String]) {
 
-    val a = new Car(4, 123, 2, "AB-142")
-    val b = new Bike(2, 2345)
+    val a = Generator.makeCar()
+    val b = Generator.makeCar()
     val d = Array.fill(scala.util.Random.nextInt(10)+10){new Part()}
     d.map(x => if(scala.util.Random.nextInt(2) == 0){x.broken = false})
     val c = new Car(4,736,3,"oa-999", d)
@@ -19,13 +19,16 @@ object Runner {
 //    for(i<-1 to 20){
 //      println(Generator.makeCar())
 //    }
-    garage.closeGarage()
-    garage.viewContents()
-    garage.openGarage()
-    garage.viewContents()
+//    garage.closeGarage()
+//    garage.viewContents()
+//    garage.openGarage()
+//    garage.viewContents()
 
 
-    println(garage.pickEmployee().name)
+    garage.fixVehicle(736)
+    garage.fixVehicle(123)
+    garage.fixVehicle(2345)
+    garage.employees.map(x=>println(x.toString()))
 
   /*
     Future plans

@@ -22,16 +22,17 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
 
   def fixVehicle(id: Int)={
     if(open) {
+      val employee = pickEmployee()
       val a = vehicles.filter(_.id == id)
       val b = a(0)
       var toFix = 0
       val c = vehicles.indexOf(b)
       b.parts.map(x=>if(x.broken == true){toFix+=1})
+      employee.time += toFix
       println("There are " + toFix + " broken parts")
       println("The cost to fix this is " + calcBill(b))
       b.parts.map(x=>x.broken=false)
       vehicles = vehicles.updated(c, b)
-      b.parts.map(x=>println(x.toString))
     }
     else{
       println("The garage is closed, so nothing can be fixed")
@@ -69,6 +70,7 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
     val newEmployee = employees.filter(_.time == min)
     newEmployee(0)
   }
+
 //  def timeToFix(vehicle: Vehicle)={
 //    var noBroken = 0
 //    vehicle.parts.map(x=>if(x.broken == true){noBroken+=1})
