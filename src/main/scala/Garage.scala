@@ -13,6 +13,11 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
     vehicles = newVehicles
   }
 
+  def removeVehicles(kind: String): Unit ={
+    val newVehicles = vehicles.filter(_.getClass.toString.substring(6) != kind)
+    vehicles = newVehicles
+  }
+
 //  def removeVehicle(model: String)={
 //    val newVehicles = vehicles.filter(_.model != null)
 //    vehicles = newVehicles
@@ -34,6 +39,7 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
       b.timeEnd = employee.time
       println("There are " + toFix + " broken parts")
       println("The cost to fix this is " + calcBill(b))
+      dayProfit += calcBill(b)
       b.parts.map(x=>x.broken=false)
       vehicles = vehicles.updated(index, b)
     }
@@ -56,6 +62,7 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
       b.timeEnd = employee.time
       println("There are " + toFix + " broken parts")
       println("The cost to fix this is " + calcBill(b))
+      dayProfit += calcBill(b)
       b.parts.map(x=>x.broken=false)
       vehicles = vehicles.updated(index, b)
     }
@@ -78,6 +85,7 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
 
   def openGarage(): Unit ={
     open = true
+    dayProfit = 0
     for(i<-1 to scala.util.Random.nextInt(11)+10){
       if(scala.util.Random.nextInt(2) == 0){
         vehicles.append(Generator.makeCar())
@@ -91,6 +99,7 @@ class Garage(var vehicles: scala.collection.mutable.ArrayBuffer[Vehicle], var op
 
   def closeGarage(): Unit ={
     open = false
+    println("The day's profit is " + dayProfit)
     vehicles = scala.collection.mutable.ArrayBuffer[Vehicle]()
   }
 

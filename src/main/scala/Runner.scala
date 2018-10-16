@@ -23,6 +23,14 @@ object Runner {
     garage.simDay()
 
 
+    println("*****************************************************")
+    println("*****************************************************")
+    println("*****************************************************")
+    garage.viewContents()
+    garage.removeVehicles("Car")
+    garage.viewContents()
+
+
 
 
   /*
